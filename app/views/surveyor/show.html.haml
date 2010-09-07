@@ -1,15 +1,25 @@
 -content_for :head do
   =stylesheet_link_tag(@survey.css_url) unless @survey.css_url.blank?
 
+%script{:type => 'text/javascript'}
+  $(document).ready(function(){
+  $('#surveyor :input').attr('disabled', true);
+  });
 #surveyor
   - @survey.sections.each do |section|
-    - div_for section do
-      .title= section.title
+    - div_for section, :class=>section.custom_class do
+      %span.title= section.title
       .questions
-        - @section.questions.each_with_index do |question, index|
-          - if question.part_of_group?
-            - if (index + 1 >= @section.questions.size) or (question.question_group_id != @section.questions[index + 1].question_group_id)
-              - # skip to the last question of the section, or the last question of the group
-              = render(:partial => "/partials/question_group", :locals => {:question_group => question.question_group, :response_set => @response_set})
-          - else
-            = render(:partial => "/partials/question", :locals => {:question => question, :response_set => @response_set})
+        - group_questions ||= []
+        - section.questions.each_with_index do |question, index|
+          - unless question.part_of_group?
+            = render(:partial => question.custom_renderer || "/partials/question.html.haml", :locals => {:question => question, :response_set => @response_set})
+          - else # gather up the group questions
+            - group_questions << question
+            - if (index + 1 >= section.questions.size) or (question.question_group_id != section.questions[index + 1].question_group_id)
+              - # this is the last question of the section, or the group
+              = render(:partial => question.question_group.custom_renderer || "/partials/question_group.html.haml", :locals => {:question_group => question.question_group, :response_set => @response_set, :group_questions => group_questions})
+              - group_questions = []
+  #status
+    - if !@response_set.completed_at.nil? and @response_set.correct? and !@response_set.participant.name.blank?
+      ="#{@response_set.survey.state.eql?('consent') ? 'Consented' : 'Completed'} By #{@response_set.participant.name} on #{@response_set.completed_at.to_date}"

@@ -39,6 +39,7 @@ class SurveyorController < ApplicationController
 
   def show
     @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => [:question, :answer]})
+    @survey = @response_set.survey
     if @response_set
       respond_to do |format|
         format.html #{render :action => :show}
