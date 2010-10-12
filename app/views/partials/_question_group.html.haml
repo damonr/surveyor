@@ -2,7 +2,7 @@
 - locals = {:question_group => question_group, :response_set => response_set, :hide_label => true}
 - div_for question_group, :class => question_group.css_class(response_set) do
   .head
-    .number= next_number
+    //.number= next_number
     %span.text= question_group.text
     %span.help= question_group.help_text
 

@@ -10,7 +10,7 @@
   - if renderer == :slider
     %script{:type => "text/javascript"}= "$(function(){$('#slider_#{question.id}').selectToUISlider({labels: #{2},labelSrc:'text', tooltip: true, tooltipSrc: 'text' }).hide();});"
   - div_for question, :class => question.css_class(response_set) do
-    .number= next_number unless question.dependent?
+    //.number= next_number unless question.dependent?
     %fieldset
       %legend{:style => "display:inline;"}
         %span.text= question.text
@@ -61,7 +61,7 @@
       = select_tag("responses[#{question.id}][answer_id]", ["<option value=''>Select one...</option>"].concat(options))
 - else # :default, :inline
   - div_for question, :class => question.css_class(response_set) do
-    .number= next_number unless question.dependent?
+    //.number= next_number unless question.dependent?
     %fieldset
       %legend
         %span.text= question.text

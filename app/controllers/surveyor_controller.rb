@@ -64,6 +64,8 @@ class SurveyorController < ApplicationController
         @section = @sections.with_includes.first
       end
       @questions = @section.questions
+      @validation = params[:validations]
+      @unanswered_questions = @questions.select{|q| q.is_mandatory and q.triggered?(@response_set) and @response_set.is_unanswered?(q)}
       @dependents = (@response_set.unanswered_dependencies - @section.questions) || []
     else
       flash[:notice] = "Unable to find your responses to the survey"

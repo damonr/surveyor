@@ -6,7 +6,15 @@
   $(".date.answer input").datepicker({changeMonth: true, changeYear: true,yearRange: '-120:+0',showOn: 'button', buttonImage: " #{root_url}/images/icons/calendar.gif", buttonImageOnly: true});
   $(".answer.timepicker input").datetime({userLang:'en',americanMode: true});
   });
+-if @validation
+  %script{:type => 'text/javascript'}
+    $(document).ready(function(){
+    -@unanswered_questions.each do |q|
+      $("#question_#{q.id}").addClass('incomplete');
+    });
 #surveyor
+  -if @validation
+    .review_alert="Before continuing, please fill out all the questions below"
   - form_tag(update_my_survey_path, :method => :put, :id => "survey_form", :class => @survey.custom_class) do
     = hidden_field_tag :current_section_id, @section.id
     - unless @sections.size < 2
