@@ -1,7 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-
-describe "surveyor/show" do
+# http://jdfrens.blogspot.com/2010/08/upgrading-to-rails-3-and-rspec-2-part_20.html
+# RSPEC-RAILS 2.4.1 IS BROKEN! 
+# https://github.com/rspec/rspec-rails/tree/v2.4.1
+describe "surveyor/show.html.haml" do
   before(:each) do
     @survey = Factory(:survey, :title => "xyz", :access_code => "xyz", :sections => [Factory(:survey_section)])  
     @survey.sections.first.questions=Array.new(3) {Factory(:question)}
@@ -24,8 +26,13 @@ describe "surveyor/show" do
 
   def expect_render_partial_calls(partial_name, num_calls)
     # Excpection regaring calls to render :partial
-    template.should_receive(:render).exactly(num_calls).times.with(hash_including(:partial => "/partials/#{partial_name}"))
-    render "surveyor/show.html.haml"
+
+#    template.should_receive(:render).exactly(num_calls).times.with(hash_including(:partial => "partials/#{partial_name}")).ordered
+    #debugger
+    # template.should_receive(:render_.with(:partial => "partials/#{partial_name}")
+    render 
+    #"surveyor/show"
+    view.should render_template(:partial => "partials/_#{partial_name}", :count => num_calls)
   end
 
 
