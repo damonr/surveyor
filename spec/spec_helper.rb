@@ -4,6 +4,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','spec','dummy','config','environment'))
 require File.expand_path("../dummy/config/environment.rb",  __FILE__) 
 require 'rspec/rails'
+require 'rspec/matchers'
 require 'factories'
 
 # Uncomment the next line to use webrat's matchers

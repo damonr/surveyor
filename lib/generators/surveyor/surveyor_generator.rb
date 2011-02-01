@@ -32,7 +32,7 @@ class SurveyorGenerator < Rails::Generators::Base
       "create_validations", "create_validation_conditions", 
       "add_display_order_to_surveys", "add_correct_answer_id_to_questions",
       "add_index_to_response_sets", "add_index_to_surveys", 
-      "add_unique_indicies", "add_section_id_to_responses"]
+      "add_unique_indicies", "add_section_id_to_responses", "add_default_value_to_answers"]
 
     ordered_migrations.each do |migration| 
       migration_template "migrate/#{migration}.rb", "db/migrate/#{migration}.rb" 

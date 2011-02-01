@@ -37,26 +37,6 @@ module SurveyorHelper
   end
   
   # Questions
-  #def next_number
-  #  @n ||= 0
-    # "#{@n += 1}<span style='padding-left:0.1em;'>)</span>".html_safe
-  # end
-  # def split_text(text = "") # Split text into with "|" delimiter - parts to go before/after input element
-    # {:prefix => text.split("|")[0].blank? ? "&nbsp;".html_safe : text.split("|")[0], :postfix => text.split("|")[1] || "&nbsp;".html_safe}
-  # end
-  # def question_help_helper(question)
-    # question.help_text.blank? ? "" : %Q(<span class="question-help">#{question.help_text}</span>).html_safe
-  # end
-
-  # Answers
-  # def fields_for_response(response, response_group = nil, &block)
-    # name = response_group.nil? ? "responses[#{response.question_id}][#{response.answer_id}]" : "response_groups[#{response.question_id}][#{response_group}][#{response.answer_id}]"
-    # fields_for(name, response, :builder => SurveyFormBuilder, &block).html_safe
-  # end
-  # def fields_for_radio(response, &block)
-    # fields_for("responses[#{response.question_id}]", response, :builder => SurveyFormBuilder, &block).html_safe
-  # end
-  
   def q_text(obj)
     @n ||= 0
     return image_tag(obj.text) if obj.is_a?(Question) and obj.display_type == "image"
