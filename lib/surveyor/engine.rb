@@ -11,5 +11,5 @@ module Surveyor
       load File.join(File.dirname(__FILE__), "../tasks/surveyor_tasks.rake")
     end
 
-  end
+ end
 end
