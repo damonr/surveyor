@@ -1,7 +1,7 @@
 # Provide a simple gemspec so you can easily use your enginex
 # project in your rails apps through git.
 Gem::Specification.new do |s|
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=  s.name = %q{surveyor}
+  s.name = %q{surveyor}
   s.version = "0.19.0"
   s.authors = ["Brian Chamberlain", "Mark Yoon"]
   s.date = %q{2011-01-31}
@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.summary = %q{A rails (gem) plugin to enable surveys in your application}
   
   s.files = Dir["lib/**/*", "app/**/*", "config/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
-  s.version = "0.0.1"
   s.add_dependency "rails", "3.0.3"
   s.add_dependency 'haml'
   s.add_dependency 'formtastic'
