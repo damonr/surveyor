@@ -19,7 +19,7 @@ module SurveyorHelper
     response_set.responses.find_all_by_question_id(dependent_questions.map(&:id)).uniq.each do |resp|
       trigger_responses << resp.to_s
     end
-    "&nbsp;&nbsp;You answered &quot;#{trigger_responses.join("&quot; and &quot;")}&quot; to the question &quot;#{dependent_questions.map(&:text).join("&quot;,&quot;")}&quot;"
+    "&nbsp;&nbsp;You answered &quot;#{trigger_responses.join("&quot; and &quot;")}&quot; to the question &quot;#{dependent_questions.map(&:text).join("&quot;,&quot;")}&quot;".html_safe
   end
   def menu_button_for(section)
     submit_tag(section.title, :name => "section[#{section.id}]")
@@ -38,22 +38,22 @@ module SurveyorHelper
   # Questions
   def next_number
     @n ||= 0
-    "#{@n += 1}<span style='padding-left:0.1em;'>)</span>"
+    "#{@n += 1}<span style='padding-left:0.1em;'>)</span>".html_safe
   end
   def split_text(text = "") # Split text into with "|" delimiter - parts to go before/after input element
-    {:prefix => text.split("|")[0].blank? ? "&nbsp;" : text.split("|")[0], :postfix => text.split("|")[1] || "&nbsp;"}
+    {:prefix => text.split("|")[0].blank? ? "&nbsp;".html_safe : text.split("|")[0], :postfix => text.split("|")[1] || "&nbsp;".html_safe}
   end
   def question_help_helper(question)
-    question.help_text.blank? ? "" : %Q(<span class="question-help">#{question.help_text}</span>)
+    question.help_text.blank? ? "" : %Q(<span class="question-help">#{question.help_text}</span>).html_safe
   end
 
   # Answers
   def fields_for_response(response, response_group = nil, &block)
     name = response_group.nil? ? "responses[#{response.question_id}][#{response.answer_id}]" : "response_groups[#{response.question_id}][#{response_group}][#{response.answer_id}]"
-    fields_for(name, response, :builder => SurveyFormBuilder, &block)
+    fields_for(name, response, :builder => SurveyFormBuilder, &block).html_safe
   end
   def fields_for_radio(response, &block)
-    fields_for("responses[#{response.question_id}]", response, :builder => SurveyFormBuilder, &block)
+    fields_for("responses[#{response.question_id}]", response, :builder => SurveyFormBuilder, &block).html_safe
   end
   
 end

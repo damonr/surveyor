@@ -61,6 +61,7 @@ module Surveyor
     def update
       saved = nil
       ActiveRecord::Base.transaction do 
+        debugger
         if @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => :answer},:lock => true)
           @response_set.current_section_id = params[:current_section_id]
         else
@@ -79,6 +80,7 @@ module Surveyor
         end
       end
       respond_to do |format|
+        debugger
         format.html do
           if saved && params[:finish]
             flash[:notice] = t('surveyor.completed_survey')

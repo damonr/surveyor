@@ -60,11 +60,14 @@
       = select_tag("responses[#{question.id}][answer_id]", ["<option value=''>Select one...</option>"].concat(options))
 - else # :default, :inline
   - div_for question, :class => question.css_class(response_set) do
-    .number= next_number unless question.dependent?
+    .number
+      = next_number unless question.dependent?
     %fieldset
       %legend
-        %span.text= question.text
-        %span.help= question.help_text
+        %span.text
+          = question.text
+        %span.help
+          = question.help_text
         = hidden_field_tag("responses[#{question.id}][question_id]", question.id)
       %ol.answers{:class => renderer == :inline ? "inline" : nil}
         - question.answers.each do |answer|

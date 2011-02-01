@@ -1,6 +1,6 @@
 #surveyor
-  .flash="flash:#{flash[:notice]}"
   - form_tag(update_my_survey_path, :method => :put, :id => "survey_form", :class => @survey.custom_class) do
+    .flash=flash[:notice]
     = hidden_field_tag :current_section_id, @section.id
     - unless @sections.size < 3
       #menu

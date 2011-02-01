@@ -2,7 +2,7 @@
 - response_group ||= nil
 - hide_label ||= false
 - disabled ||= false
-- fields_for_response(response_obj, response_group) do |response_form|
+= fields_for_response(response_obj, response_group) do |response_form|
   - case renderer
   - when :any_answer
     = response_form.survey_check_box(:selected, :class => (answer.is_exclusive? ? "exclusive" : ""))
@@ -17,8 +17,8 @@
     = response_form.label(:answer_id, answer.text)
     = response_form.text_field(:string_value, :size => 25, :maxlength => 250)
   - when :one_answer, :one_string, :one_integer
-    - fields_for_radio(response_obj) do |radio_form|
-      = radio_form.radio_button(:answer_id, answer.id, :checked => response_obj.selected?, :title => answer.text)
+    = fields_for_radio(response_obj) do |radio_form|
+      = radio_form.radio_button(:answer_id, answer.id, :checked => response_obj.selected?, :title => answer.text).html_safe
       = radio_form.label("answer_id_#{answer.id}", split_text(answer.text)[:prefix]) unless hide_label
       - if renderer == :one_string
         = response_form.text_field(:string_value, :size => 25, :maxlength => 250, :autocomplete => "off")
