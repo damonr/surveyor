@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110201081731) do
+ActiveRecord::Schema.define(:version => 20110201150022) do
 
   create_table "answers", :force => true do |t|
     t.integer  "question_id"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20110201081731) do
     t.string   "custom_renderer"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "default_value"
   end
 
   create_table "dependencies", :force => true do |t|

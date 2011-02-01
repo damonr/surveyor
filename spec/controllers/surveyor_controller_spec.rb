@@ -170,10 +170,13 @@ describe SurveyorController do
       do_put
       response.should redirect_to(:action => :edit)
     end
+
     it "should complete the found response set on finish" do      
+      puts "!!!!!!!!!!!!!!!!!!!! survey_controller#update"
       do_put_with_finish
       flash[:notice].should == "Completed survey"
     end
+
     it "should redirect to available surveys if :response_code not found" do
       put :update, :survey_code => "XYZ", :response_set_code => "DIFFERENT"
       response.should redirect_to(available_surveys_url)

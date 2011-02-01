@@ -61,16 +61,17 @@ module Surveyor
       @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => :answer}, :lock => true)
       return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
       saved = false
-      ActiveRecord::Base.transaction do
+      # ActiveRecord::Base.transaction do
         saved = @response_set.update_attributes(:responses_attributes => ResponseSet.reject_or_destroy_blanks(params[:r]))
         saved = @response_set.complete! if saved && params[:finish]
-      end
+      # end
       return redirect_with_message(surveyor_finish, :notice, t('surveyor.completed_survey')) if saved && params[:finish]
 
       respond_to do |format|
         format.html do
           flash[:notice] = t('surveyor.unable_to_update_survey') unless saved
-          redirect_to :action => "edit", :anchor => anchor_from(params[:section]), :params => {:section => section_id_from(params[:section])}
+          redirect_to "/surveys/#{@response_set.survey.access_code}/#{params[:response_set_code]}/take?section=#{section_id_from(params[:section])}"
+          #redirect_to :action => "edit", :anchor => anchor_from(params[:section]), :params => {:section => section_id_from(params[:section])}
         end
         format.js do
           ids, remove, question_ids = {}, {}, []
@@ -99,6 +100,7 @@ module Surveyor
 
     def anchor_from(p)
       p.respond_to?(:keys) && p[p.keys.first].respond_to?(:keys) ? p[p.keys.first].keys.first : nil
+      #ARRRRRGGGGGG  my brain just exploded!
     end
 
     def surveyor_index
