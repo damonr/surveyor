@@ -8,7 +8,7 @@ module Surveyor
         tiny_code = ""
         len.times { tiny_code += RAND_CHARS[rand(RAND_CHARS.size)].to_s }
         tiny_code
-      end
+     end
 
       def to_normalized_string(text)
         words_to_omit = %w(a be but has have in is it of on or the to when)

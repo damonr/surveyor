@@ -1,7 +1,6 @@
 ._*
 .*.swp
 *.swp
-.DS_Store
 .rvmrc
 .sass-cache
 config/config.yml
@@ -12,3 +11,29 @@ pkg/
 spec/dummy/db/*.sqlite3
 spec/dummy/log/*.log
 spec/dummy/tmp/
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+
+## PROJECT::GENERAL
+coverage
+rdoc
+pkg
+
+## PROJECT::SPECIFIC
+testbed/log/*.log
+testbed/db/*
+testbed/.bundle
+testbed/*
+surveys/fixtures/*.yml

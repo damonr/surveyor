@@ -27,7 +27,7 @@ module Surveyor
     def parse(str, filename)
       begin
         CSV.parse(str, :headers => :first_row, :return_headers => true, :header_converters => :symbol) do |r|
-          if r.header_row? # header row
+         if r.header_row? # header row
             return puts "Missing headers: #{missing_columns(r).inspect}\n\n" unless missing_columns(r).blank?
             context[:survey] = Survey.new(:title => filename)
             print "survey_#{context[:survey].access_code} "
@@ -45,6 +45,7 @@ module Surveyor
         puts = "Oops. Not a valid CSV file."
       # ensure
       end
+      return context[:survey]
     end
     def missing_columns(r)
       required_columns - r.headers.map(&:to_s)
@@ -204,24 +205,24 @@ class Validation < ActiveRecord::Base
       when "email"
         context[:question].answers.each do |a|
           context[:validation] = a.validations.build(:rule => "A")
-          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp_value => "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$")
+          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp => "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$")
         end
       when "integer"
         context[:question].display_type = :integer if context[:question].display_type == :string
         context[:question].answers.each do |a|
           context[:validation] = a.validations.build(:rule => "A")
-          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp_value => "\d+")
+          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp => "\d+")
         end
       when "number"
         context[:question].display_type = :float if context[:question].display_type == :string
         context[:question].answers.each do |a|
           context[:validation] = a.validations.build(:rule => "A")
-          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp_value => "^\d*(,\d{3})*(\.\d*)?$")
+          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp => "^\d*(,\d{3})*(\.\d*)?$")
         end
       when "phone"
         context[:question].answers.each do |a|
           context[:validation] = a.validations.build(:rule => "A")
-          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp_value => "\d{3}.*\d{4}")
+          context[:validation].validation_conditions.build(:rule_key => "A", :operator => "=~", :regexp => "\d{3}.*\d{4}")
         end
       end
     end
