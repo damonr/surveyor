@@ -34,7 +34,16 @@ module Surveyor
             result
           end
           def has_blank_value?(hash)
-            hash["answer_id"].blank? or hash.any?{|k,v| v.is_a?(Array) ? v.all?{|x| x.to_s.blank?} : v.to_s.blank?}
+            #rewrote this to be easier to understand... hopefully it still does the same thing.
+            return true if hash["answer_id"].blank?
+            hash.values.any? do |v| 
+              if v.is_a?(Array) 
+                v.all?{|x| x.to_s.blank?}  #are all the array values blank?
+              else
+                v.to_s.blank?
+              end
+            end
+            # hash["answer_id"].blank? or hash.any?{|k,v| v.is_a?(Array) ? v.all?{|x| x.to_s.blank?} : v.to_s.blank?}  
           end
         end
       end

@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     surveyor (0.19.0)
-      formtastic
       haml
       rails (= 3.0.3)
       yard
@@ -155,7 +154,7 @@ DEPENDENCIES
   capybara (>= 0.4.0)
   cucumber-rails
   factory_girl
-  formtastic
+  formtastic (~> 1.2.3)
   haml
   nokogiri
   rails (= 3.0.3)

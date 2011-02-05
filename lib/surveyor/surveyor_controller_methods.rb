@@ -58,7 +58,7 @@ module Surveyor
     end
 
     def update
-      @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => {:responses => :answer}, :lock => true)
+      @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => [{:responses => :answer}], :lock => true)
       return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
       saved = false
       # ActiveRecord::Base.transaction do
@@ -70,12 +70,19 @@ module Surveyor
       respond_to do |format|
         format.html do
           flash[:notice] = t('surveyor.unable_to_update_survey') unless saved
-          redirect_to "/surveys/#{@response_set.survey.access_code}/#{params[:response_set_code]}/take?section=#{section_id_from(params[:section])}"
+          survey_code = @response_set.survey.access_code
+          response_set_code = params[:response_set_code]
+          section = section_id_from(params[:section])
+          redirect_to edit_my_survey_path(survey_code,response_set_code, :section => section)
+          # redirect_to "/surveys/#{survey_code}/#{response_set_code}/take#{url_params}"
           #redirect_to :action => "edit", :anchor => anchor_from(params[:section]), :params => {:section => section_id_from(params[:section])}
         end
         format.js do
+          #Parameters: {"r"=>{"1"=>{"answer_id"=>"4"}}, 
+          #             "survey_code"=>"kitchen-sink-survey", "response_set_code"=>"XMEn5rS03Y"}
           ids, remove, question_ids = {}, {}, []
           ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
+           # debugger if @response_set.responses.find(:first, :conditions => v).nil?
             ids[k] = @response_set.responses.find(:first, :conditions => v).id if !v.has_key?("id")
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]

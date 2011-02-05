@@ -265,3 +265,23 @@ describe ResponseSet, "exporting csv" do
     csv.should match /pecan pie/    
   end
 end
+
+
+describe ResponseSet do
+  describe :has_blank_value? do
+    it "should return false when answer id is an array with at least one non-blank" do
+      hash = {"question_id"=>"3", "answer_id"=>["", "6"]}
+      ResponseSet.has_blank_value?(hash).should == false
+    end
+
+    it "should return true when answer_id is an array with all blanks" do
+      hash = {"question_id"=>"3", "answer_id"=>["", ""]}
+      ResponseSet.has_blank_value?(hash).should == true
+    end
+
+    it "should return true when answer_id is missing " do
+      hash = {"question_id"=>"3" }
+      ResponseSet.has_blank_value?(hash).should == true
+    end
+  end
+end

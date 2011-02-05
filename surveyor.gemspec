@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*", "app/**/*", "config/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.add_dependency "rails", "3.0.3"
   s.add_dependency 'haml'
-  s.add_dependency 'formtastic'
+  #s.add_dependency 'formtastic'
   s.add_dependency 'yard'
   s.add_development_dependency "capybara", ">= 0.4.0"
   s.add_development_dependency "rspec-rails", ">= 2.0.0.beta"

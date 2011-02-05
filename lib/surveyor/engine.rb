@@ -7,9 +7,5 @@ module Surveyor
 #    config.autoload_paths << File.expand_path("../../lib")
 #    engine_name :surveyor
 
-    rake_tasks do 
-      load File.join(File.dirname(__FILE__), "../tasks/surveyor_tasks.rake")
-    end
-
  end
 end

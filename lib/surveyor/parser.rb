@@ -6,9 +6,9 @@ module Surveyor
 
     # Class methods
     def self.parse(str)
-      puts
+      puts "parsing"
       Surveyor::Parser.new.parse(str)
-      puts
+      puts "done parsing"
     end
 
     # Instance methods
