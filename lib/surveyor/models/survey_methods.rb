@@ -25,10 +25,36 @@ module Surveyor
             # replace non-alphanumeric with "-". remove repeat "-"s. don't start or end with "-"
             value.to_s.downcase.gsub(/[^a-z0-9]/,"-").gsub(/-+/,"-").gsub(/-$|^-/,"")
           end
+
+
+      #merge validation errors from sections
+      validate do |survey|
+        survey.sections.each do |section|
+          next if section.valid?
+          section.errors.full_messages.each do |msg|
+            # you can customize the error message here:
+            errors.add_to_base("Error in Section '#{section.title}' #{msg}\n")
+          end
+          section.questions.each do |question|  
+            next if question.valid?
+            question.errors.full_messages.each do |msg|
+              errors.add_to_base("  in Question reference_id:'#{question.reference_identifier}' text:'#{question.text}' #{msg}\n")
+            end
+            question.answers.each do |answer|
+              next if answer.valid?
+              answer.errors.full_messages.each do |msg|
+                errors.add_to_base("    in Answer reference_id:'#{answer.reference_identifier}' text:'#{answer.text}' #{msg}\n")
+              end
+            end
+          end
+        end
+      end
         end
       end
 
       # Instance methods
+
+
       def initialize(*args)
         super(*args)
         default_args

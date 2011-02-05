@@ -16,7 +16,7 @@ module Surveyor
       self.context = {}
     end
    def parse(str)
-      instance_eval(str)
+      instance_eval(str, __FILE__, __LINE__)
       return context[:survey]
     end
     # This method_missing does all the heavy lifting for the DSL
@@ -35,10 +35,46 @@ module Surveyor
       
       # evaluate and clear context for block models
       if block_models.include?(type)
-        self.instance_eval(&block) 
+        self.instance_eval(&block)
         if type == 'survey'
           puts
-          print context[type.to_sym].save ? "saved. " : " not saved! #{context[type.to_sym].errors.each_full{|x| x }.join(", ")} "
+          c = context[type.to_sym]
+          if c.save 
+            puts 
+            puts
+            puts
+            puts "***************************************************"
+            puts " (^_^)" 
+            puts " Yay it Saved!" 
+            puts "***************************************************"
+          else
+          ascii_bug = %q{ 
+
+
+         ((((c,               ,7))))
+        (((((((              ))))))))
+         (((((((            ))))))))
+          ((((((@@@@@@@@@@@))))))))
+           @@@@@@@@@@@@@@@@)))))))
+        @@@@@@@@@@@@@@@@@@))))))@@@@
+       @@/,:::,\/,:::,\@@@@@@@@@@@@@@
+       @@|:::::||:::::|@@@@@@@@@@@@@@@
+       @@\':::'/\':::'/@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@
+          @@@@@@@@@@@@@@@@@@@@@@\
+             /    \        (     \
+            (      )        \     \
+             \    /          \
+
+          }
+
+            puts ascii_bug
+            puts "***************************************************"
+            puts " You've got some bugs in your survey"
+            puts " not saved! #{c.errors.each_full{|x| x }.join(", ")} "
+            puts "***************************************************"
+          end
+
         end
         context[type.to_sym].clear(context) unless type == 'survey'
       end
