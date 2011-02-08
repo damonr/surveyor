@@ -44,18 +44,13 @@ class SurveyorGenerator < Rails::Generators::Base
 
   end
 
-  def copy_some_assets
-    copy_dir('assets/images', 'public/images/surveyor')
-    copy_dir('assets/javascripts', 'public/javascripts/surveyor')
-    copy_dir('assets/stylesheets', 'public/stylesheets/surveyor')
+   def copy_some_assets
+     copy_dir('public/images', 'public/images/surveyor')
+     copy_dir('public/javascripts', 'public/javascripts/surveyor')
+     copy_dir('public/stylesheets', 'public/stylesheets/surveyor')
 
-    # Dir.new(File.join(SurveyorGenerator.source_root , 'assets')).entries.each do |asset|
-    #   copy_file asset, "public/#{asset}" unless File.directory?(asset)
-
-    # end
-   #copy_dir('assets
-    copy_file "assets/stylesheets/sass/surveyor.sass", "public/stylesheets/sass/surveyor.sass"
- end
+     copy_file "public/stylesheets/sass/surveyor.sass", "public/stylesheets/sass/surveyor.sass"
+  end
 
   def copy_locales
     copy_dir('locales', 'config/locales')
