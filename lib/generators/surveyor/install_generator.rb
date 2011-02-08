@@ -21,7 +21,13 @@ module Surveyor
       end
     end
     def assets
-      directory "public"
+      # directory "public"
+      copy_dir('public/images', 'public/images/surveyor')
+      copy_dir('public/javascripts', 'public/javascripts/surveyor')
+      copy_dir('public/stylesheets', 'public/stylesheets/surveyor')
+
+      copy_file "public/stylesheets/sass/surveyor.sass", "public/stylesheets/sass/surveyor.sass"
+
     end
     def surveys
       create_file "surveys/fixtures/.gitkeep"
