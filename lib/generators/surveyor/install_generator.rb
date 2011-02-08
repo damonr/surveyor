@@ -42,11 +42,9 @@ module Surveyor
   #source dir is relative to the template dir target_dir relative to the rails root
   def copy_dir(source_dir, target_dir = nil)
     target_dir = source_dir if target_dir.nil?
-    source_root File.expand_path("../templates", __FILE__)
-
-    Dir.new(File.join(source_root , source_dir)).entries.each do |file_name|
+    Dir.new(File.join(InstallGenerator.source_root , source_dir)).entries.each do |file_name|
       file = File.join(source_dir, file_name)
-      file_full_path = File.join(source_root, file)
+      file_full_path = File.join(InstallGenerator.source_root, file)
       # debugger if file.include? "images"
       copy_file file, "#{target_dir}/#{file_name}" unless File.directory?(file_full_path)
     end
