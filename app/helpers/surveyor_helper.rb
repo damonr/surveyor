@@ -29,12 +29,12 @@ module SurveyorHelper
   def previous_section
     # submit_tag("#{t ('surveyor.previous_section')} &raquo;", :name => "section[#{@section.previous.id}]") unless @section.previous.nil?
     # refactored to use copy in memory instead of making extra db calls
-    submit_tag(t('surveyor.previous_section'), :name => "section[#{@sections[@sections.index(@section)-1].id}]") unless @sections.first == @section
+    submit_tag(t('surveyor.previous_section').html_safe, :name => "section[#{@sections[@sections.index(@section)-1].id}]") unless @sections.first == @section
   end
   def next_section
     # use copy in memory instead of making extra db calls
 #    @sections.last == @section ? submit_tag(t('surveyor.click_here_to_finish'), :name => "finish") : submit_tag(t('surveyor.next_section'), :name => "section[#{@sections[@sections.index(@section)+1].id}]")
-    @sections.last == @section ? submit_tag( "finish", :name => "finish") : submit_tag("Next section &raquo;".html_safe,  :name => "section[#{@sections[@sections.index(@section)+1].id}]") 
+    @sections.last == @section ? submit_tag( "finish", :name => "finish") : submit_tag(t('surveyor.next_section').html_safe,  :name => "section[#{@sections[@sections.index(@section)+1].id}]") 
   end
   
   # Questions

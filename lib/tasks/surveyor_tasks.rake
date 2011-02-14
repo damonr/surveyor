@@ -33,7 +33,7 @@ namespace :surveyor do
   end
   desc "remove surveys (that don't have response sets)"
   task :remove => :environment do
-    surveys = Survey.all.delete_if{|s| !s.response_sets.blank?}
+    surveys = Survey.all.delete_if{|s| s.response_sets.blank?}
     if surveys
       puts "The following surveys do not have any response sets"
       surveys.each do |survey|
@@ -45,7 +45,7 @@ namespace :surveyor do
         puts "removing #{survey_to_delete.title}"
         survey_to_delete.destroy
       else
-        put "not found"
+        puts "not found"
       end
     else
       puts "There are no surveys without response sets"      
