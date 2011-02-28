@@ -3,7 +3,7 @@ class ExtendSurveyorGenerator < Rails::Generator::Base
     record do |m|
       
       # Copy README to your app
-      m.file "EXTENDING_SURVEYOR", "surveys/EXTENDING_SURVEYOR"
+      m.file "EXTENDING_SURVEYOR.md", "surveys/EXTENDING_SURVEYOR.md"
           
       # Custom layout
       m.directory "app/views/layouts"
@@ -14,7 +14,7 @@ class ExtendSurveyorGenerator < Rails::Generator::Base
       # http://blog.mattwynne.net/2009/07/11/rails-tip-use-polymorphism-to-extend-your-controllers-at-runtime/
       m.file "extensions/surveyor_controller.rb", "app/controllers/surveyor_controller.rb"
       
-      m.readme "EXTENDING_SURVEYOR"
+      m.readme "EXTENDING_SURVEYOR.md"
       
     end
   end
