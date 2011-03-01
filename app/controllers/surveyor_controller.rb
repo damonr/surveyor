@@ -4,4 +4,11 @@ require 'surveyor'
 class SurveyorController < ApplicationController
   unloadable
   include Surveyor::SurveyorControllerMethods
+  @@DEBUG = false
+  def self.toggle_debug
+    @@DEBUG = !@@DEBUG
+  end
+  def self.debug?
+    @@DEBUG
+  end
 end

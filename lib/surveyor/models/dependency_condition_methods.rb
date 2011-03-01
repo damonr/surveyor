@@ -37,6 +37,15 @@ module Surveyor
           question && question.answers.include?(r.answer)
         end
         {rule_key.to_sym => (!responses.empty? and self.is_met?(responses))}
+ 
+      #   answers = []
+      #   responses = response_set.responses.order(:created_at => :desc).select do |r| 
+      #     include_it =  question && question.answers.include?(r.answer) && !(answers.include?(r.answer.id))
+      #     answers << r.answer.id if include_it
+      #     include_it
+      #   end
+      #   # responses = [response_set.responses.where(:question_id => question.id).order(:created_at).last]
+      #   {rule_key.to_sym => (!responses.empty? and self.is_met?(responses))}
       end
 
       # Checks to see if the responses passed in meet the dependency condition

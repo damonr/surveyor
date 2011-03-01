@@ -216,5 +216,18 @@ describe SurveyorController do
       })
       JSON.parse(response.body).should == {"ids" => {"4" => 1}, "remove" => {}, "show" => ['q_1'], "hide" => ["q_2"]}
     end
+
+    it "shouldn't create multiple responses for the same question and answer" do
+      SurveyorController.toggle_debug
+      do_ajax_put({
+        "4"=>{"question_id"=>"9", "answer_id"=>"12"} #check
+      })
+      # JSON.parse(response.body).should == {"ids" => {"4" => 1}, "remove" => {}, "show" => ['q_1'], "hide" => ["q_2"]}
+      do_ajax_put({
+        "4"=>{"question_id"=>"9", "answer_id"=>"12"} #check
+      })
+      SurveyorController.toggle_debug
+      Response.count.should == 1
+    end
   end
 end

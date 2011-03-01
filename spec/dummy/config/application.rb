@@ -7,6 +7,7 @@ require "action_view/railtie"
 require "action_mailer/railtie"
 
 Bundler.require
+require "haml"
 require "surveyor"
 
 module Dummy

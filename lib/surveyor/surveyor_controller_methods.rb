@@ -61,10 +61,11 @@ module Surveyor
       @response_set = ResponseSet.find_by_access_code(params[:response_set_code], :include => [{:responses => :answer}], :lock => true)
       return redirect_with_message(available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses')) if @response_set.blank?
       saved = false
-      # ActiveRecord::Base.transaction do
+      ActiveRecord::Base.transaction do
+        @response_set.clear_responses(params[:r])
         saved = @response_set.update_attributes(:responses_attributes => ResponseSet.reject_or_destroy_blanks(params[:r]))
         saved = @response_set.complete! if saved && params[:finish]
-      # end
+      end
       return redirect_with_message(surveyor_finish, :notice, t('surveyor.completed_survey')) if saved && params[:finish]
 
       respond_to do |format|
@@ -74,18 +75,18 @@ module Surveyor
           response_set_code = params[:response_set_code]
           section = section_id_from(params[:section])
           redirect_to edit_my_survey_path(survey_code,response_set_code, :section => section)
-          # redirect_to "/surveys/#{survey_code}/#{response_set_code}/take#{url_params}"
-          #redirect_to :action => "edit", :anchor => anchor_from(params[:section]), :params => {:section => section_id_from(params[:section])}
         end
         format.js do
-          #Parameters: {"r"=>{"1"=>{"answer_id"=>"4"}}, 
-          #             "survey_code"=>"kitchen-sink-survey", "response_set_code"=>"XMEn5rS03Y"}
+          
           ids, remove, question_ids = {}, {}, []
           ResponseSet.reject_or_destroy_blanks(params[:r]).each do |k,v|
-           # debugger if @response_set.responses.find(:first, :conditions => v).nil?
-            ids[k] = @response_set.responses.find(:first, :conditions => v).id if !v.has_key?("id")
+            ids[k] = @response_set.responses.find(:first, :conditions => v).id  unless v.has_key?("id") 
             remove[k] = v["id"] if v.has_key?("id") && v.has_key?("_destroy")
             question_ids << v["question_id"]
+          end
+          #if it's checkboxes and all are unchecked
+          if question_ids.empty? && Question.find(params[:r].values.first[:question_id]).pick == "any"
+            question_ids << params[:r].values.first[:question_id]
           end
           render :json => {"ids" => ids, "remove" => remove}.merge(@response_set.reload.all_dependencies(question_ids))
         end

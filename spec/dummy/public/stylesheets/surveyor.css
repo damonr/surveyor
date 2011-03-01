@@ -11,6 +11,8 @@ body {
   font-size: 100%;
   background-color: #fffff1;
   color: #333333; }
+  #surveyor .q_hidden {
+    display: none; }
   #surveyor .surveyor_flash {
     background-color: #fff1a8;
     margin: 0 auto;

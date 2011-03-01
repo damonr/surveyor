@@ -29,7 +29,7 @@ Feature: Survey creation
     And I choose "blue"
     And I check "orange"
     And I check "brown"
-    And I press "Click here to finish"
+    And I press "Finish"
     Then there should be 1 response set with 3 responses with:
       | to_s   |
       | blue   |
@@ -47,7 +47,7 @@ Feature: Survey creation
       end
     """
     When I start the "Favorites" survey
-    And I press "Click here to finish"
+    And I press "Finish"
     Then there should be 1 response set with 1 responses with:
       | to_s   |
       | clear   |

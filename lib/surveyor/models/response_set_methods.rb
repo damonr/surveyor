@@ -132,6 +132,14 @@ module Surveyor
         !responses.any?{|r| r.survey_section_id == section.id}
       end
 
+      def clear_responses(responses_hash)
+        return if responses_hash.nil?
+        a_ids = responses_hash.values.collect{|rh| rh[:answer_id] unless rh[:id]}
+        # q_ids  = responses_hash.values.collect{|rh| rh[:question_id]}# unless rh[:id]}
+        # q_ids.uniq!
+        Response.destroy self.responses.where('answer_id in (:a_ids)', :a_ids => a_ids).collect(&:id)
+      end
+
       protected
 
       def dependencies(question_ids = nil)

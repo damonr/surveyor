@@ -37,6 +37,7 @@ describe Survey, "that has sections" do
   end
 
   it "should return survey_sections in display order" do
+    @survey.reload
     @survey.sections.should have(3).sections
     @survey.sections.should == [@s3, @s1, @s2]
   end

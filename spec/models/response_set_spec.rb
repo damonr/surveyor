@@ -215,11 +215,11 @@ describe ResponseSet, "with mandatory, dependent questions" do
   end
   def generate_responses(count, mandatory = nil, dependent = nil, triggered = nil)
     dq = Factory(:question, :survey_section => @section, :is_mandatory => (mandatory == "mandatory"))
-    da = Factory(:answer, :question => dq, :response_class => "answer")
-    dx = Factory(:answer, :question => dq, :response_class => "answer")
+    da = Factory(:answer, :question => dq, :response_class => "answer", :short_text => "da")
+    dx = Factory(:answer, :question => dq, :response_class => "answer", :short_text => "dx")
     count.times do |i|
       q = Factory(:question, :survey_section => @section, :is_mandatory => (mandatory == "mandatory"))
-      a = Factory(:answer, :question => q, :response_class => "answer")
+      a = Factory(:answer, :question => q, :response_class => "answer", :short_text => "#{i}")
       if dependent == "dependent"
         d = Factory(:dependency, :question => q)
         dc = Factory(:dependency_condition, :dependency => d, :question_id => dq.id, :answer_id => da.id)
@@ -268,6 +268,49 @@ end
 
 
 describe ResponseSet do
+  describe :clear_responses do
+    it "should destroy all the responses that are in the hash" do
+      @response_set = Factory(:response_set)
+      hash = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
+      @response_set.update_attributes(:responses_attributes => hash)
+      @response_set.responses.count.should == 1
+      @response_set.clear_responses(hash)
+      @response_set.responses.count.should == 0
+    end
+
+    it "should not destroy responses that are not in the hash" do
+      @response_set = Factory(:response_set)
+      hash = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
+      hash2 = {"5"=>{"question_id"=>"10", "answer_id"=>"12"}}
+      @response_set.update_attributes(:responses_attributes => hash)
+      @response_set.update_attributes(:responses_attributes => hash2)
+      @response_set.responses.count.should == 2
+      @response_set.clear_responses(hash)
+      @response_set.responses.count.should == 1
+    end
+
+  end
+  describe :update_attributes do
+    it "shouldn't create duplicate responses for the same answer" do
+      @response_set = Factory(:response_set)
+      hash = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
+      @response_set.update_attributes(:responses_attributes => hash)
+      @response_set.responses.count.should == 1
+      @response_set.update_attributes(:responses_attributes => hash) #unless Response.where(hash["4"])
+      @response_set.responses.count.should == 1
+    end
+
+    it "should create responses" do
+      @response_set = Factory(:response_set)
+      hash1 = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
+      hash2 = {"5"=>{"question_id"=>"9", "answer_id"=>"13"}}
+      @response_set.update_attributes(:responses_attributes => hash1) #unless Response.where(hash1["4"])  
+      @response_set.responses.count.should == 1
+      @response_set.update_attributes(:responses_attributes => hash2) #unless Response.where(hash2["5"])
+      @response_set.responses.count.should == 2
+    end
+  end
+
   describe :has_blank_value? do
     it "should return false when answer id is an array with at least one non-blank" do
       hash = {"question_id"=>"3", "answer_id"=>["", "6"]}
