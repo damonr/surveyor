@@ -133,11 +133,19 @@ module Surveyor
       end
 
       def clear_responses(responses_hash)
+         # debugger
         return if responses_hash.nil?
-        a_ids = responses_hash.values.collect{|rh| rh[:answer_id] unless rh[:id]}
+        conditions = [] 
+        responses_hash.values.each do |rh| 
+          conditions << {:question_id => rh["question_id"], :answer_id => rh["answer_id"]} unless rh["id"]
+        end
         # q_ids  = responses_hash.values.collect{|rh| rh[:question_id]}# unless rh[:id]}
         # q_ids.uniq!
-        Response.destroy self.responses.where('answer_id in (:a_ids)', :a_ids => a_ids).collect(&:id)
+        conditions.each do |condition|
+          Response.where(condition).first.destroy if  Response.where(condition).first
+        end
+
+        # Response.destroy self.responses.where('answer_id in (:a_ids)', :a_ids => a_ids).collect(&:id)
       end
 
       protected
