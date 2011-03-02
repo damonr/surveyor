@@ -1,5 +1,25 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+def setup_survey_from_factories
+  @section = Factory(:survey_section)
+  # Questions
+  @do_you_like_pie = Factory(:question, :text => "Do you like pie?", :survey_section => @section)
+  @what_flavor = Factory(:question, :text => "What flavor?", :survey_section => @section)
+  @what_bakery = Factory(:question, :text => "What bakery?", :survey_section => @section)
+  @what_colors = Factory(:question, :text => "What color?", :pick => "any", :survey_section => @section)
+  # Answers
+  @do_you_like_pie.answers << Factory(:answer, :text => "yes", :question_id => @do_you_like_pie.id)
+  @do_you_like_pie.answers << Factory(:answer, :text => "no", :question_id => @do_you_like_pie.id)
+  @what_flavor.answers << Factory(:answer, :response_class => :string, :question_id => @what_flavor.id)
+  @what_bakery.answers << Factory(:answer, :response_class => :string, :question_id => @what_bakery.id)
+  @what_colors.answers << Factory(:answer, :response_class => :string, :question_id => @what_colors.id)
+  @what_colors.answers << Factory(:answer, :response_class => :string, :question_id => @what_colors.id)
+  # Responses
+  @response_set = Factory(:response_set)
+  @response_set.responses << Factory(:response, :question_id => @do_you_like_pie.id, :answer_id => @do_you_like_pie.answers.first.id, :response_set_id => @response_set.id)
+  @response_set.responses << Factory(:response, :string_value => "pecan pie", :question_id => @what_flavor.id, :answer_id => @what_flavor.answers.first.id, :response_set_id => @response_set.id)
+end
+
 describe ResponseSet do
   before(:each) do
     @response_set = Factory(:response_set)
@@ -241,20 +261,7 @@ describe ResponseSet, "with mandatory, dependent questions" do
 end
 describe ResponseSet, "exporting csv" do
   before(:each) do
-    @section = Factory(:survey_section)
-    # Questions
-    @do_you_like_pie = Factory(:question, :text => "Do you like pie?", :survey_section => @section)
-    @what_flavor = Factory(:question, :text => "What flavor?", :survey_section => @section)
-    @what_bakery = Factory(:question, :text => "What bakery?", :survey_section => @section)
-    # Answers
-    @do_you_like_pie.answers << Factory(:answer, :text => "yes", :question_id => @do_you_like_pie.id)
-    @do_you_like_pie.answers << Factory(:answer, :text => "no", :question_id => @do_you_like_pie.id)
-    @what_flavor.answers << Factory(:answer, :response_class => :string, :question_id => @what_flavor.id)
-    @what_bakery.answers << Factory(:answer, :response_class => :string, :question_id => @what_bakery.id)
-    # Responses
-    @response_set = Factory(:response_set)
-    @response_set.responses << Factory(:response, :question_id => @do_you_like_pie.id, :answer_id => @do_you_like_pie.answers.first.id, :response_set_id => @response_set.id)
-    @response_set.responses << Factory(:response, :string_value => "pecan pie", :question_id => @what_flavor.id, :answer_id => @what_flavor.answers.first.id, :response_set_id => @response_set.id)
+    setup_survey_from_factories
   end
   it "should export a string with responses" do
     @response_set.responses.size.should == 2
@@ -269,26 +276,29 @@ end
 
 describe ResponseSet do
   describe :clear_responses do
-    it "should destroy all the responses that are in the hash" do
-      @response_set = Factory(:response_set)
-      hash = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
+    before :each do
+      setup_survey_from_factories
+    end
+    it "should destroy all the responses for THIS question when the question isn't pick any" do
+      @response_set.responses.count.should == 2 #one for this question one for another
+      hash = {"4"=>{"question_id"=>"#{@do_you_like_pie.id}", "answer_id"=>"#{ @do_you_like_pie.answers.last.id }"}}
       @response_set.update_attributes(:responses_attributes => hash)
-      @response_set.responses.count.should == 1
+      @response_set.responses.count.should == 3
       @response_set.clear_responses(hash)
-      @response_set.responses.count.should == 0
+      @response_set.responses.count.should == 1 #deleted all the ones for this question and left the other one alone
     end
 
-    it "should not destroy responses that are not in the hash" do
-      @response_set = Factory(:response_set)
-      hash = {"4"=>{"question_id"=>"9", "answer_id"=>"12"}}
-      hash2 = {"5"=>{"question_id"=>"10", "answer_id"=>"12"}}
-      @response_set.update_attributes(:responses_attributes => hash)
-      @response_set.update_attributes(:responses_attributes => hash2)
-      @response_set.responses.count.should == 2
-      @response_set.clear_responses(hash)
-      @response_set.responses.count.should == 1
-    end
-
+    # it "shouldn't destroy all the responses for the question when the question it is a  pick any" do
+    #   @response_set.responses.count.should == 2
+    #   hash = {"4"=>{"question_id"=>"#{@what_colors.id}", "answer_id"=>"#{ @what_colors.answers.first.id }"}}
+    #   @response_set.update_attributes(:responses_attributes => hash)
+    #   @response_set.responses.count.should == 3
+    #   hash2= {"4"=>{"question_id"=>"#{@what_colors.id}", "answer_id"=>"#{ @what_colors.answers.last.id }"}}
+    #   @response_set.update_attributes(:responses_attributes => hash2)
+    #   @response_set.responses.count.should == 4
+    #   @response_set.clear_responses(hash)
+    #   @response_set.responses.count.should == 3
+    # end
   end
   describe :update_attributes do
     it "shouldn't create duplicate responses for the same answer" do
@@ -327,4 +337,5 @@ describe ResponseSet do
       ResponseSet.has_blank_value?(hash).should == true
     end
   end
+
 end

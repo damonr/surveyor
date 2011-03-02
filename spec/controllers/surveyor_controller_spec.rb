@@ -202,6 +202,12 @@ describe SurveyorController do
       })
       JSON.parse(response.body).should == {"ids" => {"2" => 1, "4" => 2}, "remove" => {}, "show" => [], "hide" => []}
     end
+    it "should return hide for unchecking an answer for a pick one question" do
+      # JSON.parse(response.body).should == {"ids" => {"2" => 1, "4" => 2}, "remove" => {}, "show" => [], "hide" => []}  
+    end
+    it "should return hide for unchecking some answers for a checkbox question" do
+
+    end
     it "should return a delete for when responses are removed" do
       r = @response_set.responses.create(:question_id => 4, :answer_id => 14)
       do_ajax_put({

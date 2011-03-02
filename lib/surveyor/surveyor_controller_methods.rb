@@ -63,6 +63,7 @@ module Surveyor
       saved = false
       ActiveRecord::Base.transaction do
         @response_set.clear_responses(params[:r])
+        params[:r].values.each{|h| h.delete("id")} if params[:r]#get rid of the ids since they are messing us up
         saved = @response_set.update_attributes(:responses_attributes => ResponseSet.reject_or_destroy_blanks(params[:r]))
         saved = @response_set.complete! if saved && params[:finish]
       end
@@ -129,5 +130,6 @@ module Surveyor
         end
       end
     end
+
   end
 end

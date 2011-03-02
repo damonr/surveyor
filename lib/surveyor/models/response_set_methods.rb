@@ -133,19 +133,33 @@ module Surveyor
       end
 
       def clear_responses(responses_hash)
-         # debugger
         return if responses_hash.nil?
-        conditions = [] 
-        responses_hash.values.each do |rh| 
-          conditions << {:question_id => rh["question_id"], :answer_id => rh["answer_id"]} unless rh["id"]
-        end
-        # q_ids  = responses_hash.values.collect{|rh| rh[:question_id]}# unless rh[:id]}
-        # q_ids.uniq!
-        conditions.each do |condition|
-          Response.where(condition).first.destroy if  Response.where(condition).first
-        end
 
-        # Response.destroy self.responses.where('answer_id in (:a_ids)', :a_ids => a_ids).collect(&:id)
+        # conditions = []  #for pick any...i.e. checkboxes 
+        q_ids = [] #for other kinds of questions
+
+        responses_hash.values.each do |rh| 
+          q_id = rh["question_id"]  #get the question_id from the hash
+          unless q_ids.include? q_id #if we've already dealt with this question_id for a non checkbox question skip it since we already deleted all the responses
+            # if Question.find(q_id).pick == "any"  #it's a checkbox
+            #   conditions << {:question_id => rh["question_id"], :answer_id => rh["answer_id"]} unless rh["id"] || ResponseSet.has_blank_value?(rh)#create a condition we can use later to find the response... we need to look for the response by both question_id and answer_id
+            # else #it isn't a checkbox
+            q_ids << q_id #track the question_id so we don't need to try and delete these it again
+
+            #don't delete them if we have an [:id] in the hash
+            # responses_to_keep_ids = responses_hash.values.collect{ |rh| rh[:id]}
+            # responses_to_keep_ids.delete(nil) 
+            # responses_to_keep = self.responses.find(responses_to_keep_ids)
+            # responses_to_delete = self.responses.where(:question_id => q_id) - responses_to_keep
+            # responses_to_delete.each{|r| r.destroy}
+            self.responses.where(:question_id  => q_id).destroy_all
+          end
+        end
+        
+        # conditions.each do |condition| #for all the checkbox responses
+        #   response = self.responses.where(condition).first #find the first one that matches this question_id and answer_id
+        #   response.destroy if response 
+        # end
       end
 
       protected
