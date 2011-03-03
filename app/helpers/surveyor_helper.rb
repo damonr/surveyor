@@ -7,7 +7,7 @@ module SurveyorHelper
     stylesheet_link_tag 'surveyor/reset', 'surveyor/dateinput', 'surveyor'
   end
   def surveyor_javascripts
-    javascript_include_tag 'surveyor/jquery.tools.min', 'surveyor/jquery.surveyor'
+    javascript_include_tag 'jquery','jquery-ui-1.8.9.custom.min', 'surveyor/jquery.surveyor'
   end
   # Helper for displaying warning/notice/error flash messages
   def flash_messages(types)
@@ -34,7 +34,7 @@ module SurveyorHelper
   def next_section
     # use copy in memory instead of making extra db calls
 #    @sections.last == @section ? submit_tag(t('surveyor.click_here_to_finish'), :name => "finish") : submit_tag(t('surveyor.next_section'), :name => "section[#{@sections[@sections.index(@section)+1].id}]")
-    @sections.last == @section ? submit_tag( "finish", :name => "finish") : submit_tag("Next section &raquo;".html_safe,  :name => "section[#{@sections[@sections.index(@section)+1].id}]") 
+    @sections.last == @section ? submit_tag( "finish", :name => "finish") : submit_tag("Next &raquo;".html_safe,  :name => "section[#{@sections[@sections.index(@section)+1].id}]") 
   end
   
   # Questions
