@@ -5,13 +5,25 @@
       .close
   .survey_title= t('surveyor.take_these_surveys')
   %br
-  #survey_list
-    %ul
+  #survey_list_wrap
+    %ul#survey_list
       - unless @surveys.empty?
         - @surveys.each do |survey|
-          %li
-            - form_tag(take_survey_path(:survey_code => survey.access_code)) do 
-              = submit_tag(survey.title)
+         %li.article
+            %h5= survey.title
+            .description
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae justo sit amet quam tempor dignissim. Sed eget diam id.
+            .rating
+              %span.popular Rating : Popular
+            .recent-result.good
+              recent result : good
+            %ul.action
+              %li
+                - form_tag(take_survey_path(:survey_code => survey.access_code)) do 
+                  %input.button.safe.normal.regular.questionnaire{:name=>"commit",:type=>"submit",:value=>"Questionnaire"} 
+                  / = submit_tag( t('surveyor.take_it') )
+              %li
+                %a.button.normal.short{:href=>"#"} View Report
       - else
         %li
           No surveys

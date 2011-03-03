@@ -1,4 +1,8 @@
 #surveyor
+  %input#surveyor-title{:type=>"hidden", :value=>@survey.title}
+  %input#surveyor-code{:type=>"hidden", :value=>@survey.access_code}
+  %input#surveyor-response-code{:type=>"hidden", :value=>@response_set.access_code}
+  %input#surveyor-current-section{:type=>"hidden", :value=>@section.id}
   - unless (types = flash.keys.select{|k| [:notice, :error, :warning].include?(k)}).blank?
     .surveyor_flash
       = flash_messages(types)
