@@ -137,6 +137,8 @@ module Surveyor
 
         # conditions = []  #for pick any...i.e. checkboxes 
         q_ids = [] #for other kinds of questions
+        responses_to_keep_ids = responses_hash.values.collect{ |rh| rh[:id].to_i}
+        responses_to_keep_ids.delete(0)
 
         responses_hash.values.each do |rh| 
           q_id = rh["question_id"]  #get the question_id from the hash
@@ -147,12 +149,10 @@ module Surveyor
             q_ids << q_id #track the question_id so we don't need to try and delete these it again
 
             #don't delete them if we have an [:id] in the hash
-            # responses_to_keep_ids = responses_hash.values.collect{ |rh| rh[:id]}
-            # responses_to_keep_ids.delete(nil) 
-            # responses_to_keep = self.responses.find(responses_to_keep_ids)
-            # responses_to_delete = self.responses.where(:question_id => q_id) - responses_to_keep
-            # responses_to_delete.each{|r| r.destroy}
-            self.responses.where(:question_id  => q_id).destroy_all
+            self.responses.where(:question_id => q_id).each do |response| 
+              response.destroy unless responses_to_keep_ids.include?(response.id)
+            end
+            # self.responses.where(:question_id  => q_id).destroy_all
           end
         end
         
