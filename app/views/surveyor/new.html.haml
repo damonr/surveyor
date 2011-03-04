@@ -9,8 +9,9 @@
     %ul#survey_list
       - unless @surveys.empty?
         - @surveys.each do |survey|
-         %li.article
-            %h5= survey.title
+          %li.article
+            %h5
+              = survey.title
             .description
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae justo sit amet quam tempor dignissim. Sed eget diam id.
             .rating
