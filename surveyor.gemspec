@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A rails (gem) plugin to enable surveys in your application}
   
   s.files = Dir["lib/**/*", "app/**/*", "config/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
-  s.add_dependency "rails", "3.0.3"
+  s.add_dependency "rails", ">= 3.0.4"
   s.add_dependency 'haml'
   s.add_dependency 'formtastic', ">= 1.2.3"
   s.add_dependency 'yard'
